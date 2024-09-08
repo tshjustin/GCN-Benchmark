@@ -1,5 +1,4 @@
 from model import GCN
-
 from dataloader import *
 from args import config
 from evaluation import *

@@ -27,10 +27,6 @@ def visualize_embedding_tSNE(labels, out_features, num_classes):
 
 
 def visualize_graph(edges, node_labels, save=False):
-    """ Most of the code within this function was taken and "fine-tuned"
-        from the Aleksa Gordić's repo:
-        https://github.com/gordicaleksa/pytorch-GAT
-    """
     num_of_nodes = len(node_labels)
     edge_index_tuples = list(zip(edges[:, 0], edges[:, 1]))
 
