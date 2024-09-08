@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
 class GCNLayer(nn.Module):
     def __init__(self, in_features, out_features, use_bias=True):
         super(GCNLayer, self).__init__()
@@ -25,7 +24,6 @@ class GCNLayer(nn.Module):
             x += self.bias
 
         return torch.sparse.mm(adj, x)
-
 
 class GCN(nn.Module):
     def __init__(self, node_features, hidden_dim, num_classes, dropout, use_bias=True):
