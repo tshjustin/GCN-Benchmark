@@ -18,3 +18,10 @@ pip install -r requirements.txt
 ```
 
 
+### Results 
+| Test Loss          | Test accuracy      |
+| -------------------|:------------------:|
+| 0.670              | 0.82               | 
+
+![alt text](assets/image.png)
+

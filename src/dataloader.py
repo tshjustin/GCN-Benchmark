@@ -2,7 +2,7 @@ import torch
 import numpy as np
 import scipy.sparse as sparse
 
-def prepare_dataset(labels, num_classes, config):
+def train_test_val_split(labels, num_classes, config):
     """ Splits the loaded dataset into train/validation/test sets. """
     
     classes = [ind for ind in range(num_classes)]

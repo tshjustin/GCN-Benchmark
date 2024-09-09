@@ -9,7 +9,7 @@ if __name__ == "__main__":
     visualize_graph(edges, labels.cpu().tolist(), save=False)
     NUM_CLASSES = int(labels.max().item() + 1)
 
-    train_set_ind, val_set_ind, test_set_ind = prepare_dataset(labels, NUM_CLASSES, config)
+    train_set_ind, val_set_ind, test_set_ind = train_test_val_split(labels, NUM_CLASSES, config)
 
     model = GCN(features.shape[1], config.hidden_dim,
                 NUM_CLASSES, config.dropout, config.use_bias)
