@@ -3,19 +3,18 @@ import numpy as np
 import scipy.sparse as sparse
 
 def train_test_val_split(labels, num_classes, config):
-    """ Splits the loaded dataset into train/validation/test sets. """
     
-    classes = [ind for ind in range(num_classes)]
+    classes = [i for i in range(num_classes)]
     train_set = []
 
-    # Construct train set (indices) out of 20 samples per each class
+    # take 20 samples from each class 
     for class_label in classes:
         target_indices = torch.nonzero(labels == class_label, as_tuple=False).tolist()
         train_set += [ind[0] for ind in target_indices[:config.train_size_per_class]]
 
-    # Extract the remaining samples
     validation_test_set = [ind for ind in range(len(labels)) if ind not in train_set]
-    # Split the remaining samples into validation/test set
+
+    # remainder split 
     validation_set = validation_test_set[:config.validation_size]
     test_set = validation_test_set[config.validation_size:config.validation_size+config.test_size]
 
@@ -26,16 +25,14 @@ def enumerate_labels(labels):
     """ Converts the labels from the original
         string form to the integer [0:MaxLabels-1]
     """
-    unique = list(set(labels))
-    labels = np.array([unique.index(label) for label in labels])
+    unique = sorted(set(labels)) 
+    label_map = {label: idx for idx, label in enumerate(unique)}
+    labels = np.array([label_map[label] for label in labels])
     return labels
 
 
 def normalize_adjacency(adj):
-    """ Normalizes the adjacency matrix according to the
-        paper by Kipf et al.
-        https://arxiv.org/pdf/1609.02907.pdf
-    """
+    """Normalizes the matrix"""
     adj = adj + sparse.eye(adj.shape[0])
 
     node_degrees = np.array(adj.sum(1))
@@ -61,10 +58,9 @@ def convert_scipy_to_torch_sparse(matrix):
 
 
 def load_data(config):
-    """ Loads the graph data and stores them using
-        efficient sparse matrices approach.
-    """
-    print("Loading Cora dataset...")
+    """Loads graph and put to sparse form for efficiancy"""
+
+    print("Loading Datase")
 
     raw_nodes_data = np.genfromtxt(config.nodes_path, dtype="str")
     raw_node_ids = raw_nodes_data[:, 0].astype('int32')  # unique identifier of each node
@@ -92,6 +88,6 @@ def load_data(config):
     labels = torch.LongTensor(labels_enumerated)
     adj = convert_scipy_to_torch_sparse(adj)
 
-    print("Dataset loaded.")
+    print("Dataset loaded")
 
     return features, labels, adj, edges_ordered

@@ -3,11 +3,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class GCNLayer(nn.Module):
-    def __init__(self, in_features, out_features, use_bias=True):
+    def __init__(self, input_dim, output_dim, use_bias=True):
         super(GCNLayer, self).__init__()
-        self.weight = nn.Parameter(torch.FloatTensor(torch.zeros(size=(in_features, out_features))))
+
+        self.weight = nn.Parameter(torch.FloatTensor(torch.zeros(size=(input_dim, output_dim))))
         if use_bias:
-            self.bias = nn.Parameter(torch.FloatTensor(torch.zeros(size=(out_features,))))
+            self.bias = nn.Parameter(torch.FloatTensor(torch.zeros(size=(output_dim,))))
         else:
             self.register_parameter('bias', None)
 
