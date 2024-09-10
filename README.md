@@ -25,17 +25,12 @@ pip install -r requirements.txt
 
 ### File Structure 
 
-├── cora/
-|     |── README 
-|     ├── cora.cites   # Citation relationships    
-│     ├── cora.content           # Node feature and label data            
-│   
-├── src/
-│   ├── args.py                # argument parser configs
-│   ├── dataloader.py          # load dataset (train_test_split etc)
-│   ├── evaluation.py          # evaluation 
-│   ├── main.py                # entry point 
-│   ├── model.py               # model definition 
-│   ├── utils.py               # utility functions 
-├── EDA_CORA.ipynb             # EDA on CORA
-├── EDA_REDDIT.ipynb           # EDA on REDDIT 
+.
+├── ...
+├── docs                    # Documentation files (alternatively `doc`)
+│   ├── TOC.md              # Table of contents
+│   ├── faq.md              # Frequently asked questions
+│   ├── misc.md             # Miscellaneous information
+│   ├── usage.md            # Getting started guide
+│   └── ...                 # etc.
+└── ...
