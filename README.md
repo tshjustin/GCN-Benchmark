@@ -26,10 +26,10 @@ pip install -r requirements.txt
 ### File Structure 
 
 ├── cora/
-
-│   ├── README                
-│   ├── cora.cites             # Citation relationships 
-│   ├── cora.content           # Node feature and label data 
+|     |── README 
+|     ├── cora.cites   # Citation relationships    
+│     ├── cora.content           # Node feature and label data            
+│   
 ├── src/
 │   ├── args.py                # argument parser configs
 │   ├── dataloader.py          # load dataset (train_test_split etc)
