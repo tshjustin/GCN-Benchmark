@@ -20,6 +20,8 @@ pip install -r requirements.txt
 ### Things to add 
 1. Trying out different parameters  (Learning rates, etc)
 
+2. Add visuals of performances 
+
 
 ### File Structure 
 
