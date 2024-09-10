@@ -19,3 +19,20 @@ pip install -r requirements.txt
 
 ### Things to add 
 1. Trying out different parameters  (Learning rates, etc)
+
+
+### File Structure 
+
+├── cora/
+│   ├── README                
+│   ├── cora.cites             # Citation relationships 
+│   ├── cora.content           # Node feature and label data 
+├── src/
+│   ├── args.py                # argument parser configs
+│   ├── dataloader.py          # load dataset (train_test_split etc)
+│   ├── evaluation.py          # evaluation 
+│   ├── main.py                # entry point 
+│   ├── model.py               # model definition 
+│   ├── utils.py               # utility functions 
+├── EDA_CORA.ipynb             # EDA on CORA
+├── EDA_REDDIT.ipynb           # EDA on REDDIT 
