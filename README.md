@@ -26,6 +26,7 @@ pip install -r requirements.txt
 ### File Structure 
 
 ├── cora/
+
 │   ├── README                
 │   ├── cora.cites             # Citation relationships 
 │   ├── cora.content           # Node feature and label data 
