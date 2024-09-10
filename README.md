@@ -17,11 +17,5 @@ venv/Scripts/Activate
 pip install -r requirements.txt 
 ```
 
-
-### Results 
-| Test Loss          | Test accuracy      |
-| -------------------|:------------------:|
-| 0.670              | 0.82               | 
-
-![alt text](assets/image.png)
-
+### Things to add 
+1. Trying out different parameters  (Learning rates, etc)
