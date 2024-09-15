@@ -22,6 +22,6 @@ parser.add_argument("--lr", type=float, default=1e-2)
 parser.add_argument("--weight_decay", type=float, default=5e-3)
 parser.add_argument("--patience", type=int, default=10)
 parser.add_argument("--epochs", type=int, default=200)
-parser.add_argument("--use_early_stopping", type=bool, default=True)
+parser.add_argument("--early_termination", type=bool, default=True)
 
 config = parser.parse_args()
