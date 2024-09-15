@@ -35,9 +35,9 @@ def visualize_embedding_tSNE(labels, out_features, num_classes):
     
     plt.show()
 
-def visualize_performance(train_acc, train_loss, val_acc, val_loss, acc_color="blue", loss_color="red"):
+def visualize_performance(train_acc, train_loss, train_f1, val_f1, val_acc, val_loss, acc_color="blue", loss_color="red", f1_color="purple"):
     """Visualizes training and validation accuracy and loss across epochs."""
-    fig, axs = plt.subplots(2, 2, figsize=(14, 10))
+    fig, axs = plt.subplots(3, 2, figsize=(14, 10))
 
     # Top-left: Training Loss
     axs[0, 0].plot(train_loss, linewidth=2, color="green", label="Train Loss")
@@ -53,19 +53,33 @@ def visualize_performance(train_acc, train_loss, val_acc, val_loss, acc_color="b
     axs[0, 1].set_xlabel("Epoch")
     axs[0, 1].grid()
 
-    # Bottom-left: Validation Loss
+    # Middle-left: Validation Loss
     axs[1, 0].plot(val_loss, linewidth=2, color=loss_color, label="Validation Loss")
     axs[1, 0].set_title("Validation Loss")
     axs[1, 0].set_ylabel("Cross Entropy Loss")
     axs[1, 0].set_xlabel("Epoch")
     axs[1, 0].grid()
 
-    # Bottom-right: Validation Accuracy
+    # Middle-right: Validation Accuracy
     axs[1, 1].plot(val_acc, linewidth=2, color=acc_color, label="Validation Accuracy")
     axs[1, 1].set_title("Validation Accuracy")
     axs[1, 1].set_ylabel("Accuracy")
     axs[1, 1].set_xlabel("Epoch")
     axs[1, 1].grid()
+
+    # Bottom-left: Training Micro F1
+    axs[2, 0].plot(train_f1, linewidth=2, color=f1_color, label="Train Micro F1")
+    axs[2, 0].set_title("Training Micro F1")
+    axs[2, 0].set_ylabel("F1 Score")
+    axs[2, 0].set_xlabel("Epoch")
+    axs[2, 0].grid()
+
+    # Bottom-right: Validation Micro F1
+    axs[2, 1].plot(val_f1, linewidth=2, color=f1_color, label="Validation Micro F1")
+    axs[2, 1].set_title("Validation Micro F1")
+    axs[2, 1].set_ylabel("F1 Score")
+    axs[2, 1].set_xlabel("Epoch")
+    axs[2, 1].grid()
 
     # Adjust layout to prevent overlap
     plt.tight_layout()
