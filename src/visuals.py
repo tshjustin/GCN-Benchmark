@@ -35,52 +35,66 @@ def visualize_embedding_tSNE(labels, out_features, num_classes):
     
     plt.show()
 
-def visualize_performance(train_acc, train_loss, train_f1, val_f1, val_acc, val_loss, acc_color="blue", loss_color="red", f1_color="purple"):
-    """Visualizes training and validation accuracy and loss across epochs."""
-    fig, axs = plt.subplots(3, 2, figsize=(14, 10))
+def visualize_train_performance(train_acc, train_loss, acc_color="blue", loss_color="green"):
+    """Visualizes training accuracy and loss across epochs."""
+    fig, axs = plt.subplots(1, 2, figsize=(10, 5))
 
-    # Top-left: Training Loss
-    axs[0, 0].plot(train_loss, linewidth=2, color="green", label="Train Loss")
-    axs[0, 0].set_title("Training Loss")
-    axs[0, 0].set_ylabel("Cross Entropy Loss")
-    axs[0, 0].set_xlabel("Epoch")
-    axs[0, 0].grid()
+    # Left: Training Loss
+    axs[0].plot(train_loss, linewidth=2, color=loss_color, label="Train Loss")
+    axs[0].set_title("Training Loss")
+    axs[0].set_ylabel("Cross Entropy Loss")
+    axs[0].set_xlabel("Epoch")
+    axs[0].grid()
 
-    # Top-right: Training Accuracy
-    axs[0, 1].plot(train_acc, linewidth=2, color="green", label="Train Accuracy")
-    axs[0, 1].set_title("Training Accuracy")
-    axs[0, 1].set_ylabel("Accuracy")
-    axs[0, 1].set_xlabel("Epoch")
-    axs[0, 1].grid()
+    # Right: Training Accuracy
+    axs[1].plot(train_acc, linewidth=2, color=acc_color, label="Train Accuracy")
+    axs[1].set_title("Training Accuracy")
+    axs[1].set_ylabel("Accuracy")
+    axs[1].set_xlabel("Epoch")
+    axs[1].grid()
 
-    # Middle-left: Validation Loss
-    axs[1, 0].plot(val_loss, linewidth=2, color=loss_color, label="Validation Loss")
-    axs[1, 0].set_title("Validation Loss")
-    axs[1, 0].set_ylabel("Cross Entropy Loss")
-    axs[1, 0].set_xlabel("Epoch")
-    axs[1, 0].grid()
+    plt.tight_layout()
+    plt.show()
 
-    # Middle-right: Validation Accuracy
-    axs[1, 1].plot(val_acc, linewidth=2, color=acc_color, label="Validation Accuracy")
-    axs[1, 1].set_title("Validation Accuracy")
-    axs[1, 1].set_ylabel("Accuracy")
-    axs[1, 1].set_xlabel("Epoch")
-    axs[1, 1].grid()
 
-    # Bottom-left: Training Micro F1
-    axs[2, 0].plot(train_f1, linewidth=2, color=f1_color, label="Train Micro F1")
-    axs[2, 0].set_title("Training Micro F1")
-    axs[2, 0].set_ylabel("F1 Score")
-    axs[2, 0].set_xlabel("Epoch")
-    axs[2, 0].grid()
+def visualize_val_performance(val_acc, val_loss, acc_color="blue", loss_color="red"):
+    """Visualizes validation accuracy and loss across epochs."""
+    fig, axs = plt.subplots(1, 2, figsize=(10, 5))
 
-    # Bottom-right: Validation Micro F1
-    axs[2, 1].plot(val_f1, linewidth=2, color=f1_color, label="Validation Micro F1")
-    axs[2, 1].set_title("Validation Micro F1")
-    axs[2, 1].set_ylabel("F1 Score")
-    axs[2, 1].set_xlabel("Epoch")
-    axs[2, 1].grid()
+    # Left: Validation Loss
+    axs[0].plot(val_loss, linewidth=2, color=loss_color, label="Validation Loss")
+    axs[0].set_title("Validation Loss")
+    axs[0].set_ylabel("Cross Entropy Loss")
+    axs[0].set_xlabel("Epoch")
+    axs[0].grid()
 
-    # Adjust layout to prevent overlap
+    # Right: Validation Accuracy
+    axs[1].plot(val_acc, linewidth=2, color=acc_color, label="Validation Accuracy")
+    axs[1].set_title("Validation Accuracy")
+    axs[1].set_ylabel("Accuracy")
+    axs[1].set_xlabel("Epoch")
+    axs[1].grid()
+
+    plt.tight_layout()
+    plt.show()
+
+def visualize_f1_performance(train_f1, val_f1, f1_color="purple"):
+    """Visualizes training and validation F1 score across epochs."""
+    fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+
+    # Left: Training F1 Score
+    axs[0].plot(train_f1, linewidth=2, color=f1_color, label="Train Micro F1")
+    axs[0].set_title("Training Micro F1")
+    axs[0].set_ylabel("F1 Score")
+    axs[0].set_xlabel("Epoch")
+    axs[0].grid()
+
+    # Right: Validation F1 Score
+    axs[1].plot(val_f1, linewidth=2, color=f1_color, label="Validation Micro F1")
+    axs[1].set_title("Validation Micro F1")
+    axs[1].set_ylabel("F1 Score")
+    axs[1].set_xlabel("Epoch")
+    axs[1].grid()
+
     plt.tight_layout()
     plt.show()

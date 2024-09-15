@@ -22,4 +22,6 @@ if __name__ == "__main__":
     print("Learning Rate:", config.lr, "Decay Rate", config.weight_decay)
 
     # visualize_embedding_tSNE(labels, prediction, NUM_CLASSES)
-    visualize_performance(train_acc, train_loss, train_f1_list, validation_f1_list, val_acc, val_loss)
+    visualize_train_performance(train_acc, train_loss)
+    visualize_val_performance(val_acc, val_loss)
+    visualize_f1_performance(train_f1_list, validation_f1_list)
