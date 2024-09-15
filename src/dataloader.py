@@ -3,23 +3,39 @@ import numpy as np
 import scipy.sparse as sparse
 
 def train_test_val_split(labels, num_classes, config):
-    
+    """Split to TTV proportional to class size to prevent imbalance"""
     classes = [i for i in range(num_classes)]
     train_set = []
+    validation_set = []
+    test_set = []
 
-    # take 20 samples from each class 
+    total_samples = len(labels)
+    total_train_size = int(total_samples * config.train_proportion)
+    total_val_size = int(total_samples * config.validation_proportion)
+    total_test_size = total_samples - total_train_size - total_val_size
+
+    # Proportionally assign training samples from each class
     for class_label in classes:
+        
         target_indices = torch.nonzero(labels == class_label, as_tuple=False).tolist()
-        train_set += [ind[0] for ind in target_indices[:config.train_size_per_class]]
+        num_class_samples = len(target_indices)
+        proportion_of_train_set = int(np.floor(num_class_samples * (config.train_proportion))) 
+        train_set += [ind[0] for ind in target_indices[:proportion_of_train_set]]
 
+    # Remainder for validation and test 
     validation_test_set = [ind for ind in range(len(labels)) if ind not in train_set]
 
-    # remainder split 
-    validation_set = validation_test_set[:config.validation_size]
-    test_set = validation_test_set[config.validation_size:config.validation_size+config.test_size]
+    # Same as above
+    for class_label in classes:
+        target_indices = [ind for ind in validation_test_set if labels[ind] == class_label]
+        num_class_samples = len(target_indices)
+        proportion_of_val_set = int(np.floor(num_class_samples * (config.validation_proportion / (config.validation_proportion + config.test_proportion))))
+        proportion_of_test_set = num_class_samples - proportion_of_val_set
+
+        validation_set += target_indices[:proportion_of_val_set]
+        test_set += target_indices[proportion_of_val_set:proportion_of_val_set + proportion_of_test_set]
 
     return train_set, validation_set, test_set
-
 
 def map_labels(labels):
     "Map string labels to a numeric value"
@@ -42,7 +58,7 @@ def normalize_adjacency(adj):
     inv_sqrt_degrees[np.isinf(inv_sqrt_degrees)] = 0.0  # Handle infinite values
     inv_sqrt_degrees[np.isnan(inv_sqrt_degrees)] = 0.0  # Handle NaN values
 
-    # Create  diagonal matrix
+    # Create diagonal matrix
     inv_sqrt_degree_matrix = sparse.diags(inv_sqrt_degrees, dtype=np.float32)
 
     # Normalize
