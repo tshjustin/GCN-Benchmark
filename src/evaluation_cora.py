@@ -12,8 +12,6 @@ def train(model, features, labels, adj, train_set_ind, val_set_ind, config):
     train_loss_list = []
     validation_acc = []
     validation_loss = []
-    train_f1_list = [] 
-    validation_f1_list = []
 
     if config.early_termination:
         last_min_val_loss = float('inf')
@@ -43,8 +41,6 @@ def train(model, features, labels, adj, train_set_ind, val_set_ind, config):
             # performance 
             train_loss_list.append(train_loss.item())
             train_acc_list.append(train_acc)
-            train_f1_list.append(train_f1)
-            validation_f1_list.append(val_f1)
             validation_loss.append(val_loss.item())
             validation_acc.append(val_acc)
 
@@ -71,7 +67,7 @@ def train(model, features, labels, adj, train_set_ind, val_set_ind, config):
     if config.early_termination and stopped_early:
         print(f"Negligible model improvement. Stopped at epoch: {epoch}.")
 
-    return train_acc_list, train_loss_list, train_f1_list, validation_f1_list, validation_acc, validation_loss, 
+    return train_acc_list, train_loss_list, validation_acc, validation_loss, 
 
 
 def evaluate_on_test(model, features, labels, adj, test_ind, config):

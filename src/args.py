@@ -2,11 +2,24 @@ from argparse import ArgumentParser
 
 parser = ArgumentParser()
 
-# Data Parser 
-parser.add_argument("--nodes_path", type=str, default="../cora/cora.content")
-parser.add_argument("--edges_path", type=str, default="../cora/cora.cites")
+# Model choice
+parser.add_argument("--model", type=str, choices=["GAT", "GCN"], default="GAT")
 
-# Model Parameters  
+# Dataset choice
+parser.add_argument("--dataset", type=str, choices=["PPI", "CORA"], default="CORA")
+
+# Data Parser 
+parser.add_argument("--nodes_path", type=str, default="cora/cora.content")
+parser.add_argument("--edges_path", type=str, default="cora/cora.cites")
+parser.add_argument("--labels_path", type=str, default="ppi/ppi_labels")
+
+# GAT-Specific Parameters
+parser.add_argument("--n_heads", type=int, default=8)
+parser.add_argument("--n_hidden_units", type=int, default=8)
+parser.add_argument("--leaky_relu_slope", type=float, default=0.2)
+parser.add_argument("--concat", type=bool, default=False)
+
+# Model Parameters (For both GAT & GCN)
 parser.add_argument("--hidden_dim", type=int, default=16)
 parser.add_argument("--dropout", type=float, default=0.5)
 parser.add_argument("--use-bias", type=bool, default=True)
@@ -25,3 +38,10 @@ parser.add_argument("--epochs", type=int, default=200)
 parser.add_argument("--early_termination", type=bool, default=True)
 
 config = parser.parse_args()
+
+if config.dataset == "CORA":
+    config.nodes_path = "cora/cora.content"
+    config.edges_path = "cora/cora.cites"
+elif config.dataset == "PPI":
+    config.nodes_path = "ppi/ppi_nodes.txt"
+    config.edges_path = "ppi/ppi_edges.txt"

@@ -4,10 +4,10 @@ import torch.nn.functional as F
 
 class GAT(nn.Module):
 
-    def __init__(self, in_features, n_hidden, n_heads, num_classes, concat=False, dropout=0.4, leaky_relu_slope=0.2):
+    def __init__(self, in_features, n_hidden, n_heads, num_classes, num_layers, concat, dropout, leaky_relu_slope):
         """ 
         Args:
-            in_features (int): number of input features per node.
+            node_features (int): number of input features per node.
             n_hidden (int): output size of the first Graph Attention Layer.
             n_heads (int): number of attention heads in the first Graph Attention Layer.
             num_classes (int): number of classes to predict for each node.
@@ -18,11 +18,33 @@ class GAT(nn.Module):
         """
 
         super(GAT, self).__init__()
+        self.num_layers = num_layers
+        self.dropout = nn.Dropout(p=dropout)
 
-        self.gat1 = GraphAttentionLayer(in_features=in_features, out_features=n_hidden, n_heads=n_heads, concat=concat, dropout=dropout, leaky_relu_slope=leaky_relu_slope )
+        self.layers = nn.ModuleList()
+        self.layers.append(GraphAttentionLayer(in_features=in_features, 
+                                               out_features=n_hidden, 
+                                               n_heads=n_heads, 
+                                               concat=concat, 
+                                               dropout=dropout, 
+                                               leaky_relu_slope=leaky_relu_slope))
         
-        self.gat2 = GraphAttentionLayer(in_features=n_hidden, out_features=num_classes, n_heads=1, concat=False, dropout=dropout, leaky_relu_slope=leaky_relu_slope )
-        
+        for _ in range(1, num_layers - 1):
+            self.layers.append(GraphAttentionLayer(in_features=n_hidden, 
+                                                   out_features=n_hidden, 
+                                                   n_heads=n_heads, 
+                                                   concat=concat, 
+                                                   dropout=dropout, 
+                                                   leaky_relu_slope=leaky_relu_slope))
+
+        # Last layer: from hidden features to number of classes, no concatenation
+        self.layers.append(GraphAttentionLayer(in_features=n_hidden, 
+                                               out_features=num_classes, 
+                                               n_heads=1, 
+                                               concat=False, 
+                                               dropout=dropout, 
+                                               leaky_relu_slope=leaky_relu_slope))
+
 
     def forward(self, input_tensor: torch.Tensor , adj_mat: torch.Tensor):
         """
@@ -32,12 +54,14 @@ class GAT(nn.Module):
         Returns:
             torch.Tensor: Output tensor after the forward pass.
         """
-        x = self.gat1(input_tensor, adj_mat)
-        x = F.elu(x) 
-        x = self.gat2(x, adj_mat)
+        x = input_tensor
 
-        return F.log_softmax(x, dim=1) 
-    
+        for i, layer in enumerate(self.layers):
+            x = layer(x, adj_mat)
+            if i != len(self.layers) - 1:  # ELU only for hidden layers
+                x = F.elu(x)
+
+        return F.log_softmax(x, dim=1)
 
 class GraphAttentionLayer(nn.Module):
     """
@@ -51,7 +75,7 @@ class GraphAttentionLayer(nn.Module):
         dropout (float, optional): dropout rate. Defaults to 0.4.
         leaky_relu_slope (float, optional): alpha (slope) of the leaky relu activation. Defaults to 0.2.
     """
-    def __init__(self, in_features: int, out_features: int, n_heads: int, concat: bool = False, dropout: float = 0.4, leaky_relu_slope: float = 0.2):
+    def __init__(self, in_features, out_features, n_heads, dropout, leaky_relu_slope, concat):
         super(GraphAttentionLayer, self).__init__()
 
         self.n_heads = n_heads 
@@ -99,7 +123,7 @@ class GraphAttentionLayer(nn.Module):
         e = source_scores + target_scores.mT
         return self.leakyrelu(e)
 
-    def forward(self,  h: torch.Tensor, adj_mat: torch.Tensor):
+    def forward(self, h: torch.Tensor, adj_mat: torch.Tensor):
         """
         Performs a graph attention layer operation.
 
@@ -108,7 +132,7 @@ class GraphAttentionLayer(nn.Module):
             adj_mat (torch.Tensor): Adjacency matrix representing graph structure.
 
         Returns:
-            torch.Tensor: Output tensor after the graph convolution operation.
+            torch.Tensor: Output tensor after the graph attention operation.
         """
         n_nodes = h.shape[0]
         h_transformed = torch.mm(h, self.W)
@@ -117,8 +141,12 @@ class GraphAttentionLayer(nn.Module):
 
         e = self._get_attention_scores(h_transformed)
 
+        # Convert the sparse adjacency matrix to a dense one
+        if adj_mat.is_sparse:
+            adj_mat = adj_mat.to_dense()
+
         connectivity_mask = -9e16 * torch.ones_like(e)
-        e = torch.where(adj_mat > 0, e, connectivity_mask) # masked attention scores
+        e = torch.where(adj_mat > 0, e, connectivity_mask)  # masked attention scores
 
         attention = F.softmax(e, dim=-1)
         attention = F.dropout(attention, self.dropout, training=self.training)
