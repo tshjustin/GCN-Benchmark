@@ -1,6 +1,14 @@
 # GCN-Benchmark
 SC4020 Project on GCN Algorithm Benchmarking 
 
+The 3 Datasets of choice are: 
+
+| Dataset                   | Description        |
+| -------------------|:------------------:|
+| Cora | Data is downloaded straight from source and inside the repo       | 
+| PPI      |  Data is cleaned from an external source. Cleaning Code can be found: https://github.com/tshjustin/PPI_EDA |  
+| Pubmed          |      | 
+
 ### Setting up Environment 
 ```
 py -3.8 -m venv venv
@@ -38,3 +46,7 @@ pip install -r requirements.txt
 
 ### CORA Data 
 The Cora dataset consists of 2708 scientific publications classified into one of seven classes. The citation network consists of 5429 links. Each publication in the dataset is described by a 0/1-valued word vector indicating the absence/presence of the corresponding word from the dictionary. The dictionary consists of 1433 unique words.
+
+
+### PPI Data 
+The PPI dataset consist of 56944 Nodes which represents proteins and and 818217 Edges that represents a molecular bond between each protein. Each node in the dataset is described by a 50-vector feauture that describes the protein. There are a total of 121 possible labels, and each node may be classified with multiple labels (Rather than 1)
