@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from cora.utils import * 
+from utils import * 
 from sklearn.metrics import f1_score
 
 def train(model, features, labels, adj, train_set_ind, val_set_ind, config):
