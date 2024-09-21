@@ -1,4 +1,2 @@
 /venv
-src/__pycache__
-src/dataloader/__pycache__
-/reddit
+/src/**/__pycache__
