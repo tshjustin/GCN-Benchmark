@@ -1,8 +1,8 @@
-from models.GCN import GCN
-from dataloader import *
+from cora.GCN import GCN
+from cora.dataloader_cora import *
 from args import config
-from evaluation import *
-from visuals import * 
+from cora.evaluation_cora import *
+from cora.visuals import * 
 
 if __name__ == "__main__":
      

@@ -3,8 +3,8 @@ from argparse import ArgumentParser
 parser = ArgumentParser()
 
 # Data Parser 
-parser.add_argument("--nodes_path", type=str, default="cora/cora.content")
-parser.add_argument("--edges_path", type=str, default="cora/cora.cites")
+parser.add_argument("--nodes_path", type=str, default="../cora/cora.content")
+parser.add_argument("--edges_path", type=str, default="../cora/cora.cites")
 
 # Model Parameters  
 parser.add_argument("--hidden_dim", type=int, default=16)
