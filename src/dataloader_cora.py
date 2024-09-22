@@ -103,7 +103,7 @@ def covert_to_pytorch_format(matrix):
     matrix = torch.sparse.FloatTensor(indices, data, shape)
     return matrix
 
-def load_data(config):
+def load_cora_data(config):
     """Loads graph and put to sparse form for efficiancy"""
 
     print("Loading CORA Dataset")
@@ -140,10 +140,3 @@ def load_data(config):
     print("Loaded CORA Dataset")
 
     return features, labels, adj, edges_ordered
-
-
-if __name__ == "__main__": 
-    from args import config 
-    features, labels, adj, edges_orderded = load_data(config)
-
-    print ("Features",features, "labels", labels, "adj", adj, "edges_ordered", edges_orderded)

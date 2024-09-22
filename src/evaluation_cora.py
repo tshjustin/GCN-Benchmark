@@ -65,6 +65,7 @@ def train_CORA(model, features, labels, adj, train_set_ind, val_set_ind, config)
 
 
 def evaluate_CORA(model, features, labels, adj, test_ind):
+    """Returns the logits for each nodes"""
 
     criterion = nn.CrossEntropyLoss()
 
@@ -72,7 +73,7 @@ def evaluate_CORA(model, features, labels, adj, test_ind):
         model.eval()
         y_pred = model(features, adj)
         test_loss = criterion(y_pred[test_ind], labels[test_ind])
-        test_acc = accuracy(y_pred[test_ind], labels[test_ind])
+        test_acc = accuracy(y_pred[test_ind], labels[test_ind]) # performs the argmax 
 
     print()
     print(f"Testing Accuracy loss: {test_loss:.5f}  |  Testing Accuracy: {test_acc:.5f}")

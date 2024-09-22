@@ -2,15 +2,15 @@ import torch.nn as nn
 import torch 
 from utils import f1 
 
-def train_PPI(model, features, labels, adj, train_set_ind, val_set_ind, config):
+def train_PPI(model, train_features, train_labels, train_adj, val_features, val_labels, val_adj, config):
 
     optimizer = torch.optim.Adam(model.parameters(), lr=config.lr, weight_decay=config.weight_decay)
-    criterion = nn.BCEWithLogitsLoss()  # Use binary cross-entropy loss for multi-label classification
+    criterion = nn.BCEWithLogitsLoss()
 
-    train_f1_list = []
     train_loss_list = []
-    validation_f1 = []
+    train_f1_list = []
     validation_loss = []
+    validation_f1 = []
 
     if config.early_termination:
         last_min_val_loss = float('inf')
@@ -18,54 +18,84 @@ def train_PPI(model, features, labels, adj, train_set_ind, val_set_ind, config):
         stopped_early = False
 
     for epoch in range(config.epochs):
-        optimizer.zero_grad()
         model.train()
+        total_train_loss = 0
+        total_train_f1 = 0
+        total_val_loss = 0
+        total_val_f1 = 0
 
-        y_pred = model(features, adj)
-        train_loss = criterion(y_pred[train_set_ind], labels[train_set_ind])
+        # Loop over training graphs
+        for graph_idx in range(len(train_features)):
+            features = train_features[graph_idx]
+            labels = train_labels[graph_idx]
+            adj = train_adj[graph_idx]
 
-        train_f1 = f1(y_pred[train_set_ind], labels[train_set_ind])
+            optimizer.zero_grad()
 
-        train_loss.backward()
-        optimizer.step()
+            # Forward pass 
+            y_pred = model(features, adj)
 
+            train_loss = criterion(y_pred, labels)
+            train_f1 = f1(y_pred, labels)
+
+            # Backpropagation
+            train_loss.backward()
+            optimizer.step()
+
+            total_train_loss += train_loss.item()
+            total_train_f1 += train_f1
+
+        # Validation step
+        model.eval()
         with torch.no_grad():
-            model.eval()
-            val_loss = criterion(y_pred[val_set_ind], labels[val_set_ind])
-            val_f1 = f1(y_pred[val_set_ind], labels[val_set_ind])
+            for graph_idx in range(len(val_features)):
+                val_features_graph = val_features[graph_idx]
+                val_labels_graph = val_labels[graph_idx]
+                val_adjs_graph = val_adj[graph_idx]
 
-            train_loss_list.append(train_loss.item())
-            train_f1_list.append(train_f1)
-            validation_loss.append(val_loss.item())
-            validation_f1.append(val_f1)
+                y_pred_val = model(val_features_graph, val_adjs_graph)
 
-            if config.early_termination:
-                if val_loss < last_min_val_loss:
-                    last_min_val_loss = val_loss
-                    patience_counter = 0
-                else:
-                    patience_counter += 1
-                    if patience_counter == config.patience:
-                        stopped_early = True
-        
+                val_loss = criterion(y_pred_val, val_labels_graph)
+                val_f1 = f1(y_pred_val, val_labels_graph)
+
+                total_val_loss += val_loss.item()
+                total_val_f1 += val_f1
+
+        avg_train_loss = total_train_loss / len(train_features)
+        avg_train_f1 = total_train_f1 / len(train_features)
+        avg_val_loss = total_val_loss / len(val_features)
+        avg_val_f1 = total_val_f1 / len(val_features)
+
+        train_loss_list.append(avg_train_loss)
+        train_f1_list.append(avg_train_f1)
+        validation_loss.append(avg_val_loss)
+        validation_f1.append(avg_val_f1)
+
+        # Print epoch results
         print(" | ".join([f"Epoch: {epoch:4d}",
-                        f"Train loss: {train_loss.item():.3f}",
-                        f"Train F1: {train_f1:.3f}",
-                        f"Val loss: {val_loss.item():.3f}",
-                        f"Val F1: {val_f1:.3f}"
-                        ]))
+                          f"Train loss: {avg_train_loss:.3f}",
+                          f"Train F1: {avg_train_f1:.3f}",
+                          f"Val loss: {avg_val_loss:.3f}",
+                          f"Val F1: {avg_val_f1:.3f}"
+                          ]))
 
-        if config.early_termination and stopped_early:
+        # Early stopping check
+        if config.early_termination:
+            if avg_val_loss < last_min_val_loss:
+                last_min_val_loss = avg_val_loss
+                patience_counter = 0
+            else:
+                patience_counter += 1
+                if patience_counter == config.patience:
+                    print(f"stopping epoch {epoch} with no improvement in validation loss")
+                    stopped_early = True
+
+        if stopped_early:
             break
-
-    if config.early_termination and stopped_early:
-        print(f"Early stopping at epoch: {epoch} due to no significant improvement.")
 
     return train_f1_list, train_loss_list, validation_f1, validation_loss
 
 def evaluate_PPI(model, features_list, labels_list, adjs_list):
-    """Buggy lol"""
-    
     total_loss = 0
     total_f1 = 0
     criterion = torch.nn.BCEWithLogitsLoss()
@@ -77,10 +107,11 @@ def evaluate_PPI(model, features_list, labels_list, adjs_list):
                 adj = adjs_list[graph_idx]
 
                 output = model(features, adj)
+                output_probs = torch.sigmoid(output)
                 loss = criterion(output, labels)
                 total_loss += loss.item()
 
-                f1_score_graph = f1(output, labels)
+                f1_score_graph = f1(output_probs, labels)
                 total_f1 += f1_score_graph
         
 
