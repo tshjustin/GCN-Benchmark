@@ -56,10 +56,9 @@ def train(model, features, labels, adj, train_set_ind, val_set_ind, config):
         print(" | ".join([f"Epoch: {epoch:4d}",
                         f"Train loss: {train_loss.item():.3f}",
                         f"Train acc: {train_acc:.2f}",
-                        f"Train F1: {train_f1:.2f}",
                         f"Val loss: {val_loss.item():.3f}",
-                        f"Val acc: {val_acc:.2f}",
-                        f"Val F1: {val_f1:.2f}"]))
+                        f"Val acc: {val_acc:.2f}"
+                        ]))
 
         if config.early_termination and stopped_early:
             break
@@ -81,5 +80,5 @@ def evaluate_on_test(model, features, labels, adj, test_ind, config):
         test_acc = accuracy(y_pred[test_ind], labels[test_ind])
 
     print()
-    print(f"Testing Accuracy loss: {test_loss:.3f}  |  Testing Accuracy: {test_acc:.2f}")
+    print(f"Testing Accuracy loss: {test_loss:.5f}  |  Testing Accuracy: {test_acc:.5f}")
     return y_pred
