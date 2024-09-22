@@ -3,15 +3,14 @@ from argparse import ArgumentParser
 parser = ArgumentParser()
 
 # Model choice
-parser.add_argument("--model", type=str, choices=["GAT", "GCN"], default="GAT")
+parser.add_argument("--model", type=str, choices=["GAT", "GCN"], default="GCN")
 
 # Dataset choice
-parser.add_argument("--dataset", type=str, choices=["PPI", "CORA"], default="CORA")
+parser.add_argument("--dataset", type=str, choices=["PPI", "CORA"], default="PPI")
 
 # Data Parser 
 parser.add_argument("--nodes_path", type=str, default="cora/cora.content")
 parser.add_argument("--edges_path", type=str, default="cora/cora.cites")
-parser.add_argument("--labels_path", type=str, default="ppi/ppi_labels")
 
 # GAT-Specific Parameters
 parser.add_argument("--n_heads", type=int, default=8)
@@ -42,6 +41,8 @@ config = parser.parse_args()
 if config.dataset == "CORA":
     config.nodes_path = "cora/cora.content"
     config.edges_path = "cora/cora.cites"
+
 elif config.dataset == "PPI":
-    config.nodes_path = "ppi/ppi_nodes.txt"
-    config.edges_path = "ppi/ppi_edges.txt"
+    config.train_dir = "ppi_csv/train"
+    config.test_dir = "ppi_csv/test"
+    config.val_dir = "ppi_csv/valid"  

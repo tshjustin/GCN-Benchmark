@@ -1,9 +1,8 @@
 import torch
 import torch.nn as nn
-from utils import * 
-from sklearn.metrics import f1_score
+from utils import accuracy
 
-def train(model, features, labels, adj, train_set_ind, val_set_ind, config):
+def train_CORA(model, features, labels, adj, train_set_ind, val_set_ind, config):
 
     optimizer = torch.optim.Adam(model.parameters(), lr=config.lr, weight_decay=config.weight_decay)
     criterion = nn.CrossEntropyLoss()
@@ -29,14 +28,10 @@ def train(model, features, labels, adj, train_set_ind, val_set_ind, config):
         train_loss.backward()
         optimizer.step()
 
-        train_f1 = f1_score(labels[train_set_ind].cpu(), y_pred[train_set_ind].argmax(dim=1).cpu(), average='micro')
-
         with torch.no_grad():
             model.eval()
             val_loss = criterion(y_pred[val_set_ind], labels[val_set_ind])
             val_acc = accuracy(y_pred[val_set_ind], labels[val_set_ind])
-
-            val_f1 = f1_score(labels[val_set_ind].cpu(), y_pred[val_set_ind].argmax(dim=1).cpu(), average='micro')
 
             # performance 
             train_loss_list.append(train_loss.item())
@@ -69,7 +64,7 @@ def train(model, features, labels, adj, train_set_ind, val_set_ind, config):
     return train_acc_list, train_loss_list, validation_acc, validation_loss, 
 
 
-def evaluate_on_test(model, features, labels, adj, test_ind, config):
+def evaluate_CORA(model, features, labels, adj, test_ind):
 
     criterion = nn.CrossEntropyLoss()
 

@@ -15,7 +15,7 @@ The Cora dataset consists of 2708 scientific publications classified into one of
 
 
 ### PPI Data 
-The PPI dataset consist of 56944 Nodes which represents proteins and and 818217 Edges that represents a molecular bond between each protein. Each node in the dataset is described by a 50-vector feauture that describes the protein. There are a total of 121 possible labels, and each node may be classified with multiple labels (Rather than 1)
+The PPI dataset consist of 24 Graphs - Split into 20 Train , 2 Validation and 2 Test. Each Nodes represents proteins and edges  represents a molecular bond between each protein. Each node in the dataset is described by a 50-vector feauture that describes the protein. There are a total of 121 possible labels, and each node may be classified with multiple labels.
 
 
 ### Setting up Environment 
@@ -25,15 +25,25 @@ venv/Scripts/Activate
 pip install -r requirements.txt 
 ```
 
-### GCN Model Details 
+### GCN / GAT Model Details - CORA 
 
 |                    | Description        |
-| -------------------|:------------------:|
-| Model Architecture | n-GCN Layer        | 
+| -------------------|------------------|
+| Model Architecture | n-GCN / Attention Layer| 
 | Loss Function      | CrossEntropy Loss  |  
 | Optimizer          | Adam Optimizer     | 
+| Evaluation Metric | Accuracy |
 
-### Hyperparameters of GCN 
+### GCN / GAT Model Details - PPI 
+
+|                    | Description        |
+| -------------------|------------------|
+| Model Architecture | n-GCN / Attention Layer        | 
+| Loss Function      | Binary Cross-Entropy Loss  |  
+| Optimizer          | Adam Optimizer     | 
+| Evaluation Metric | F1 Score | 
+
+### Arguments 
 ```
 --nodes_path : path to nodes 
 --edges_path: path to edges 
