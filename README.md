@@ -6,7 +6,8 @@ The 3 Datasets of choice are:
 | Dataset                   | Description        |
 | -------------------|------------------|
 | Cora | Data is downloaded straight from source. Source: https://linqs.org/datasets/      | 
-| PPI      |  Data is cleaned from an external source. Cleaning Code can be found: https://github.com/tshjustin/PPI_EDA |  
+| PPI      | Inductive PPI data (One big Graph) https://github.com/tshjustin/PPI_EDA |  
+| PPI | Transductive PPI data (24 Graphs) https://github.com/tshjustin/PPI_Inductive_EDA |
 | Pubmed          |      | 
 
 ### CORA Data 
