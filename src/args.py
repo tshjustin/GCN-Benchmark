@@ -3,10 +3,10 @@ from argparse import ArgumentParser
 parser = ArgumentParser()
 
 # Model choice
-parser.add_argument("--model", type=str, choices=["GAT", "GCN"], default="GCN")
+parser.add_argument("--model", type=str, choices=["GAT", "GCN"], default="GAT")
 
 # Dataset choice
-parser.add_argument("--dataset", type=str, choices=["PPI", "CORA"], default="PPI")
+parser.add_argument("--dataset", type=str, choices=["SQU", "CORA"], default="CORA")
 
 # Data Parser 
 parser.add_argument("--nodes_path", type=str, default="cora/cora.content")
@@ -42,7 +42,6 @@ if config.dataset == "CORA":
     config.nodes_path = "cora/cora.content"
     config.edges_path = "cora/cora.cites"
 
-elif config.dataset == "PPI":
-    config.train_dir = "ppi_csv/train"
-    config.test_dir = "ppi_csv/test"
-    config.val_dir = "ppi_csv/valid"  
+elif config.dataset == "SQU":
+    config.nodes_path = "squirrel/out1_node_feature_label.txt"
+    config.edges_path = "squirrel/out1_graph_edges.txt"
