@@ -29,10 +29,10 @@ def visualize_embedding_tSNE(labels, out_features, num_classes):
     plt.title("t-SNE projection of the learned features")
     
     plt.show()
-    
+
 def visualize_train_performance(results, acc_color="blue", loss_color="red"):
     """Visualizes training accuracy and loss across epochs for different configurations."""
-    fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+    fig, axs = plt.subplots(1, 2, figsize=(14, 6))
 
     # Iterate over results and plot
     for key, result in results.items():
@@ -65,7 +65,7 @@ def visualize_train_performance(results, acc_color="blue", loss_color="red"):
 
 def visualize_val_performance(results, acc_color="blue", loss_color="red"):
     """Visualizes validation accuracy and loss across epochs for different configurations."""
-    fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+    fig, axs = plt.subplots(1, 2, figsize=(14, 6))
 
     # Iterate over results and plot
     for key, result in results.items():
