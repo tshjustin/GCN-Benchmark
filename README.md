@@ -25,7 +25,7 @@ venv/Scripts/Activate
 pip install -r requirements.txt 
 ```
 
-### GCN / GAT Model Details - CORA 
+### GCN / GAT Model Details - CORA  / Squirrel
 
 |                    | Description        |
 | -------------------|------------------|
@@ -45,21 +45,17 @@ pip install -r requirements.txt
 
 ### Arguments 
 ```
---nodes_path : path to nodes 
---edges_path: path to edges 
+--num_heads: number of attention heads for GAT
+
 --hidden_dim: number of hidden dimensions 
 --dropout: ratio to dropout to prevent overfitting 
 --use-bias: bias to balance 
-
 --num_layers: number of training layers / amount of propogation 
---train_proportion
---validation_proportion
---test_proportion
 
 --lr : learning rate 
 --weight_decay: decay rate of learning rate 
---patience: number of runs where improvement less than 0.01 before terminating 
 --epochs: training loops 
---early_termination: if patience number is hit, then early terminates 
-```
 
+Example Usage with CLI: 
+python train.py --model GAT --dataset CORA --num_heads 4 8 --num_layers 2 3 --hidden_dim 16 32 --dropout 0.5 --lr 0.001
+```

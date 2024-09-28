@@ -1,11 +1,18 @@
-import torch
 import dgl
 from model.GCN import GCN 
 from model.GAT import GAT
 from args import config
-from evaluate import train, evaluate, setup_optimization
+from evaluate import train_loop, setup_optimization
+from visuals import * 
+import itertools
+import torch 
+
+results = {} 
+combinations = itertools.product(config.num_layers, config.lr, config.hidden_dim, config.dropout, config.num_heads)
 
 if __name__ == "__main__":
+
+    # Dataset Choice
     if config.dataset == "CORA":
         data = dgl.data.CoraGraphDataset()
         graph = data[0]
@@ -27,49 +34,36 @@ if __name__ == "__main__":
     in_feats = features.shape[1]  # Get input size 
     num_classes = data.num_classes # Get the number of classes 
 
-    if config.model == "GCN":
-        model = GCN(in_feats, config.hidden_dim, num_classes, config.dropout, config.num_layers, config.use_bias)
-        
-    elif config.model == "GAT":
-        model = GAT(in_feats, config.hidden_dim, num_classes, config.n_heads, config.dropout, config.num_layers, config.use_bias)
+    for num_layers, lr, hidden_dim, dropout, n_heads in combinations: # Run all combinations 
+        if config.model == "GCN":
+            model = GCN(in_feats, hidden_dim, num_classes, dropout, num_layers, config.use_bias)
+            
+        elif config.model == "GAT":
+            model = GAT(in_feats, hidden_dim, num_classes, n_heads, dropout, num_layers, config.use_bias)
+            
+        optimizer, criterion = setup_optimization(model, lr)
     
-    optimizer, criterion = setup_optimization(model, config.lr)
-    
-    # Storing of Results 
-    train_losses = []
-    train_accuracies = []
-    val_losses = []
-    val_accuracies = []
+        # Training of Model 
+        print(f"Model: {config.model}, Dataset: {config.dataset}, Layers: {num_layers}, Hidden_Dim: {hidden_dim}, Dropout: {dropout}")
+        train_losses, train_accuracies, val_losses, val_accuracies = train_loop(model, optimizer, criterion, graph, features, labels, train_mask, val_mask, config.epochs)
 
-    # Training of Model 
-    print(f"Model {config.model} is used with {config.dataset} dataset")
-
-    for epoch in range(config.epochs):
-        # Train and store training loss and accuracy
-        train_loss, train_acc = train(model, optimizer, criterion, graph, features, labels, train_mask)
-        train_losses.append(train_loss)
-        train_accuracies.append(train_acc)
-
-        val_acc, val_loss = evaluate(model, val_mask, graph, features, labels, criterion)
-        val_accuracies.append(val_acc)
-        val_losses.append(val_loss)
-
-        print(f"Epoch {epoch+1} | Training Loss: {train_loss:.4f} | Training Accuracy: {train_acc:.4f} | "
-            f"Validation Loss: {val_loss:.4f} | Validation Accuracy: {val_acc:.4f}")
-
-    test_acc, _ = evaluate(model, test_mask, graph, features, labels, criterion)
-    print(f"Test Accuracy: {test_acc:.4f}")
+        # Storing of results 
+        key = f"{num_layers}_layers_lr_{lr}_hidden_{hidden_dim}_dropout_{dropout}"
+        results[key] = {
+            'train_losses': train_losses,
+            'train_accuracies': train_accuracies,
+            'val_losses': val_losses,
+            'val_accuracies': val_accuracies
+        }
 
     # Get Configuration Settings 
     print("Configurations:")
     for arg in vars(config):
         print(f"{arg}: {getattr(config, arg)}")
 
-    # # Training loop for GAT
-    # for epoch in range(50):
-    #     loss = train(gat_model, gat_optimizer, gat_criterion, graph, features, labels, train_mask)
-    #     val_acc = evaluate(gat_model, val_mask, graph, features, labels)
-    #     print(f"Epoch {epoch+1} | GAT Loss: {loss:.4f} | GAT Validation Accuracy: {val_acc:.4f}")
+    with torch.no_grad():
+        out_features = model(graph, features)
 
-    # gat_test_acc = evaluate(gat_model, test_mask, graph, features, labels)
-    # print(f"GAT Test Accuracy: {gat_test_acc:.4f}")
+    visualize_train_performance(results)
+    visualize_val_performance(results)
+    visualize_embedding_tSNE(labels, out_features, num_classes)

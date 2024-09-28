@@ -37,3 +37,21 @@ def evaluate(model, mask, graph, features, labels, criterion):
         loss = criterion(logits, labels[mask]).item()
 
     return accuracy, loss
+
+def train_loop(model, optimizer, criterion, graph, features, labels, train_mask, val_mask, epochs):
+    train_losses, train_accuracies = [], []
+    val_losses, val_accuracies = [], []
+
+    for epoch in range(epochs):
+        train_loss, train_acc = train(model, optimizer, criterion, graph, features, labels, train_mask)
+        val_acc, val_loss = evaluate(model, val_mask, graph, features, labels, criterion)
+
+        train_losses.append(train_loss)
+        train_accuracies.append(train_acc)
+        val_losses.append(val_loss)
+        val_accuracies.append(val_acc)
+
+        print(f"Epoch {epoch+1} | Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.4f} | "
+              f"Val Loss: {val_loss:.4f} | Val Acc: {val_acc:.4f}")
+
+    return train_losses, train_accuracies, val_losses, val_accuracies
