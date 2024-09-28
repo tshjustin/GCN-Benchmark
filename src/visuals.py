@@ -29,11 +29,12 @@ def visualize_embedding_tSNE(labels, out_features, num_classes):
     plt.title("t-SNE projection of the learned features")
     
     plt.show()
-
-def visualize_train_performance(results):
+    
+def visualize_train_performance(results, acc_color="blue", loss_color="red"):
     """Visualizes training accuracy and loss across epochs for different configurations."""
     fig, axs = plt.subplots(1, 2, figsize=(10, 5))
 
+    # Iterate over results and plot
     for key, result in results.items():
         train_acc = result['train_accuracies']
         train_loss = result['train_losses']
@@ -44,12 +45,14 @@ def visualize_train_performance(results):
         # Right: Training Accuracy
         axs[1].plot(train_acc, linewidth=2, label=f"{key} - Accuracy")
 
+    # Customize Loss Plot
     axs[0].set_title("Training Loss")
     axs[0].set_ylabel("Cross Entropy Loss")
     axs[0].set_xlabel("Epoch")
     axs[0].grid()
     axs[0].legend()
 
+    # Customize Accuracy Plot
     axs[1].set_title("Training Accuracy")
     axs[1].set_ylabel("Accuracy")
     axs[1].set_xlabel("Epoch")
@@ -60,24 +63,29 @@ def visualize_train_performance(results):
     plt.show()
 
 
-def visualize_val_performance(results):
+def visualize_val_performance(results, acc_color="blue", loss_color="red"):
     """Visualizes validation accuracy and loss across epochs for different configurations."""
     fig, axs = plt.subplots(1, 2, figsize=(10, 5))
 
+    # Iterate over results and plot
     for key, result in results.items():
         val_acc = result['val_accuracies']
         val_loss = result['val_losses']
         
+        # Left: Validation Loss
         axs[0].plot(val_loss, linewidth=2, label=f"{key} - Loss")
         
+        # Right: Validation Accuracy
         axs[1].plot(val_acc, linewidth=2, label=f"{key} - Accuracy")
 
+    # Customize Loss Plot
     axs[0].set_title("Validation Loss")
     axs[0].set_ylabel("Cross Entropy Loss")
     axs[0].set_xlabel("Epoch")
     axs[0].grid()
     axs[0].legend()
 
+    # Customize Accuracy Plot
     axs[1].set_title("Validation Accuracy")
     axs[1].set_ylabel("Accuracy")
     axs[1].set_xlabel("Epoch")
