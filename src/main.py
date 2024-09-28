@@ -40,8 +40,12 @@ if __name__ == "__main__":
         # Initialize the model with current settings
         if config.model == "GCN":
             model = GCN(in_feats, hidden_dim, num_classes, dropout, num_layer, config.use_bias)
+            key = f"{num_layer}_layers_lr_{lr}_hidden_{hidden_dim}_dropout_{dropout}"
+
         elif config.model == "GAT":
-            model = GAT(in_feats, hidden_dim, num_classes, config.n_heads[0], dropout, num_layer, config.use_bias)
+            for n_head in config.num_heads:
+                model = GAT(in_feats, hidden_dim, num_classes, n_head, dropout, num_layer, config.use_bias)
+                key = f"{num_layer}_layers_lr_{lr}_hidden_{hidden_dim}_dropout_{dropout}_num_heads{n_head}"
 
         optimizer, criterion = setup_optimization(model, lr)
 
@@ -52,8 +56,6 @@ if __name__ == "__main__":
         test_acc, test_loss = evaluate(model, test_mask, graph, features, labels, criterion)
         print(f"Test Loss: {test_loss:.4f} | Test Accuracy: {test_acc:.4f}")
 
-        # Store results in a dictionary
-        key = f"{num_layer}_layers_lr_{lr}_hidden_{hidden_dim}_dropout_{dropout}"
         results[key] = {
             'train_losses': train_losses,
             'train_accuracies': train_accuracies,
