@@ -52,6 +52,8 @@ def compare_methods():
         accuracy_results = {'GCN': [], 'GAT': []}
         time_results = {'GCN': [], 'GAT': []}
 
+        print(f"Dataset {config.dataset}")
+        
         for model_name, ModelClass in models.items():
             print(f"Training {model_name}...")
 

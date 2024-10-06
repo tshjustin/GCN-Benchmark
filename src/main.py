@@ -108,9 +108,9 @@ if __name__ == "__main__":
                 # For PPI, use DataLoader and process batches of graphs
                 if config.dataset == "PPI":
                     optimizer, criterion = setup_optimization_ppi(model, lr)
-                    train_loader = DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True, collate_fn=collate_fn)
-                    val_loader = DataLoader(valid_dataset, batch_size=config.batch_size, shuffle=False, collate_fn=collate_fn)
-                    test_loader = DataLoader(test_dataset, batch_size=config.batch_size, shuffle=False, collate_fn=collate_fn)
+                    train_loader = DataLoader(train_dataset, batch_size=4, shuffle=True, collate_fn=collate_fn)
+                    val_loader = DataLoader(valid_dataset, batch_size=4, shuffle=False, collate_fn=collate_fn)
+                    test_loader = DataLoader(test_dataset, batch_size=4, shuffle=False, collate_fn=collate_fn)
 
                     train_losses, train_accuracies, val_losses, val_accuracies = train_loop_ppi(
                         model, optimizer, criterion, train_loader, val_loader, config.epochs
