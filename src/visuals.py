@@ -45,14 +45,12 @@ def visualize_train_performance(results, acc_color="blue", loss_color="red"):
         # Right: Training Accuracy
         axs[1].plot(train_acc, linewidth=2, label=f"{key} - Accuracy")
 
-    # Customize Loss Plot
     axs[0].set_title("Training Loss")
     axs[0].set_ylabel("Cross Entropy Loss")
     axs[0].set_xlabel("Epoch")
     axs[0].grid()
     axs[0].legend()
 
-    # Customize Accuracy Plot
     axs[1].set_title("Training Accuracy")
     axs[1].set_ylabel("Accuracy")
     axs[1].set_xlabel("Epoch")
@@ -78,14 +76,12 @@ def visualize_val_performance(results, acc_color="blue", loss_color="red"):
         # Right: Validation Accuracy
         axs[1].plot(val_acc, linewidth=2, label=f"{key} - Accuracy")
 
-    # Customize Loss Plot
     axs[0].set_title("Validation Loss")
     axs[0].set_ylabel("Cross Entropy Loss")
     axs[0].set_xlabel("Epoch")
     axs[0].grid()
     axs[0].legend()
 
-    # Customize Accuracy Plot
     axs[1].set_title("Validation Accuracy")
     axs[1].set_ylabel("Accuracy")
     axs[1].set_xlabel("Epoch")
@@ -93,4 +89,40 @@ def visualize_val_performance(results, acc_color="blue", loss_color="red"):
     axs[1].legend()
 
     plt.tight_layout()
+    plt.show()
+
+def visualize_embedding_tSNE_multilabel(labels, out_features, num_classes):
+
+    # Convert labels and features to numpy arrays
+    node_labels = labels.cpu().numpy()  # Shape: [num_nodes, num_classes]
+    out_features = out_features.cpu().numpy()
+
+    # Assign each node the class with the highest score (dominant label)
+    dominant_labels = node_labels.argmax(axis=1)
+
+    # Perform t-SNE projection
+    t_sne_embeddings = TSNE(n_components=2, perplexity=30, method='barnes_hut').fit_transform(out_features)
+
+    plt.figure(figsize=(8, 6))
+
+    # Select color map
+    color_map = plt.get_cmap('tab10') if num_classes <= 10 else plt.get_cmap('hsv')
+    colors = [color_map(i / num_classes) for i in range(num_classes)]
+
+    # Plot each class based on dominant label
+    for class_id in range(num_classes):
+        plt.scatter(
+            t_sne_embeddings[dominant_labels == class_id, 0],
+            t_sne_embeddings[dominant_labels == class_id, 1], 
+            s=20, 
+            color=colors[class_id], 
+            edgecolors='black', 
+            linewidths=0.15, 
+            label=f'Class {class_id}'
+        )
+
+    # Add legend and formatting
+    plt.legend(title="Classes", bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.axis("off")
+    plt.title("t-SNE projection of the learned features (dominant label)")
     plt.show()

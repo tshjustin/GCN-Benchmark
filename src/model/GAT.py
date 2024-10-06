@@ -3,7 +3,7 @@ import torch.nn as nn
 from dgl.nn import GATConv
 
 class GAT(nn.Module):
-    def __init__(self, in_feats, hidden_dim, num_classes, num_heads, dropout, num_layers, use_bias):
+    def __init__(self, in_feats, hidden_dim, num_classes, num_heads, dropout, num_layers, use_bias=True):
         super(GAT, self).__init__()
 
         self.dropout = nn.Dropout(dropout)

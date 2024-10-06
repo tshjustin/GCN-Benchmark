@@ -3,7 +3,7 @@ import torch.nn as nn
 from dgl.nn import GraphConv
 
 class GCN(nn.Module):
-    def __init__(self, node_features, hidden_dim, num_classes, drop_out, num_layers, use_bias):
+    def __init__(self, node_features, hidden_dim, num_classes, drop_out, num_layers, use_bias=True):
         """
         Args:
             node_features (int): Number of features per node
