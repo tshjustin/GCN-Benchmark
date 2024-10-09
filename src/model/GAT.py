@@ -1,35 +1,68 @@
-import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from dgl.nn import GATConv
 
 class GAT(nn.Module):
-    def __init__(self, in_feats, hidden_dim, num_classes, num_heads, dropout, num_layers, use_bias=True):
+    def __init__(self, in_feats, hidden_dim, num_classes, num_heads, dropout=0, num_layers=3, use_bias=True):
         super(GAT, self).__init__()
-
-        self.dropout = nn.Dropout(dropout)
-        self.num_heads = num_heads
-        self.hidden_dim = hidden_dim
         
-        # Calculate hidden_size per head - Ensure same as GCN number of layers of 16
-        hidden_size = hidden_dim // num_heads 
+        #num_heads = [4, 4, 6]
+        
+        self.gat_layers = nn.ModuleList()
+        self.num_layers = num_layers
+        self.num_heads = num_heads
+        self.dropout = dropout
+        self.use_bias = use_bias
+        
+        # First layer
+        self.gat_layers.append(
+            GATConv(
+                in_feats,
+                hidden_dim,
+                num_heads,
+                feat_drop=dropout,
+                attn_drop=dropout,
+                activation=F.elu,
+                residual=True,
+                bias=use_bias
+            )
+        )
+        
+        # Intermediate layers
+        for i in range(1, num_layers - 1):
+            self.gat_layers.append(
+                GATConv(
+                    hidden_dim * num_heads,
+                    hidden_dim,
+                    num_heads,
+                    feat_drop=dropout,
+                    attn_drop=dropout,
+                    activation=F.elu,
+                    residual=True,
+                    bias=use_bias
+                )
+            )
+        
+        # Last layer
+        self.gat_layers.append(
+            GATConv(
+                hidden_dim * num_heads,
+                num_classes,
+                num_heads,
+                feat_drop=dropout,
+                attn_drop=dropout,
+                activation=None,
+                residual=True,
+                bias=use_bias
+            )
+        )
 
-        # First GAT layer: input features -> hidden_dim 
-        self.layers = nn.ModuleList()
-        self.layers.append(GATConv(in_feats, hidden_size, num_heads, bias=use_bias))
-
-        # Hidden layers:  hidden_size * num_heads -> hidden_size * num_heads
-        for _ in range(num_layers - 2):
-            self.layers.append(GATConv(hidden_size * num_heads, hidden_size, num_heads, bias=use_bias))
-
-        # Final GAT layer: Maps hidden_dim (hidden_size * num_heads) to num_classes with 1 head
-        self.layers.append(GATConv(hidden_size * num_heads, num_classes, 1, bias=use_bias))
-
-    def forward(self, graph, features):
-        x = features
-        for i, layer in enumerate(self.layers):
-            x = layer(graph, x)
-            if i != len(self.layers) - 1:  # Apply ReLU and flatten output from multiple heads for all but the last layer
-                x = torch.relu(x)
-                x = x.view(x.size(0), -1)  # Flatten output from multiple heads
-                x = self.dropout(x)
-        return x.squeeze() 
+    def forward(self, g, inputs):
+        h = inputs
+        for i, layer in enumerate(self.gat_layers):
+            h = layer(g, h)
+            if i == self.num_layers - 1:
+                h = h.mean(1)
+            else:
+                h = h.flatten(1)
+        return h

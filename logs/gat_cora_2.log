@@ -1,0 +1,63 @@
+  NumNodes: 2708
+  NumEdges: 10556
+  NumFeats: 1433
+  NumClasses: 7
+  NumTrainingSamples: 140
+  NumValidationSamples: 500
+  NumTestSamples: 1000
+Done loading data from cached files.
+Training model with 2 layers, lr=0.001, hidden_dim=8, num_heads=[4], dropout=0.5
+Training GAT with 4 heads
+Epoch 25 | Train Loss: 1.9277 | Train Acc: 0.6571 | Val Loss: 1.9348 | Val Acc: 0.7120
+Epoch 50 | Train Loss: 1.9093 | Train Acc: 0.8071 | Val Loss: 1.9215 | Val Acc: 0.7680
+Epoch 75 | Train Loss: 1.8690 | Train Acc: 0.9071 | Val Loss: 1.9024 | Val Acc: 0.7760
+Epoch 100 | Train Loss: 1.8211 | Train Acc: 0.8857 | Val Loss: 1.8748 | Val Acc: 0.7960
+Epoch 125 | Train Loss: 1.7715 | Train Acc: 0.8786 | Val Loss: 1.8377 | Val Acc: 0.7980
+Epoch 150 | Train Loss: 1.6825 | Train Acc: 0.9071 | Val Loss: 1.7904 | Val Acc: 0.8020
+Epoch 175 | Train Loss: 1.5816 | Train Acc: 0.9000 | Val Loss: 1.7325 | Val Acc: 0.7960
+Epoch 200 | Train Loss: 1.4626 | Train Acc: 0.9286 | Val Loss: 1.6710 | Val Acc: 0.7980
+Test Loss: 1.6563 | Test Accuracy: 0.8080
+Training model with 2 layers, lr=0.001, hidden_dim=16, num_heads=[4], dropout=0.5
+Training GAT with 4 heads
+Epoch 25 | Train Loss: 1.9154 | Train Acc: 0.7643 | Val Loss: 1.9270 | Val Acc: 0.7240
+Epoch 50 | Train Loss: 1.8663 | Train Acc: 0.9286 | Val Loss: 1.9005 | Val Acc: 0.7700
+Epoch 75 | Train Loss: 1.8079 | Train Acc: 0.9286 | Val Loss: 1.8585 | Val Acc: 0.7880
+Epoch 100 | Train Loss: 1.6952 | Train Acc: 0.9357 | Val Loss: 1.8009 | Val Acc: 0.7860
+Epoch 125 | Train Loss: 1.6092 | Train Acc: 0.9571 | Val Loss: 1.7232 | Val Acc: 0.7880
+Epoch 150 | Train Loss: 1.4493 | Train Acc: 0.9571 | Val Loss: 1.6265 | Val Acc: 0.7960
+Epoch 175 | Train Loss: 1.3250 | Train Acc: 0.9357 | Val Loss: 1.5219 | Val Acc: 0.7960
+Epoch 200 | Train Loss: 1.0996 | Train Acc: 0.9571 | Val Loss: 1.4084 | Val Acc: 0.7920
+Test Loss: 1.3877 | Test Accuracy: 0.8010
+Training model with 2 layers, lr=0.001, hidden_dim=32, num_heads=[4], dropout=0.5
+Training GAT with 4 heads
+Epoch 25 | Train Loss: 1.8977 | Train Acc: 0.8357 | Val Loss: 1.9155 | Val Acc: 0.7960
+Epoch 50 | Train Loss: 1.8280 | Train Acc: 0.8929 | Val Loss: 1.8719 | Val Acc: 0.7840
+Epoch 75 | Train Loss: 1.7077 | Train Acc: 0.9500 | Val Loss: 1.8010 | Val Acc: 0.7960
+Epoch 100 | Train Loss: 1.5450 | Train Acc: 0.9500 | Val Loss: 1.6988 | Val Acc: 0.8020
+Epoch 125 | Train Loss: 1.3422 | Train Acc: 0.9643 | Val Loss: 1.5676 | Val Acc: 0.8000
+Epoch 150 | Train Loss: 1.1380 | Train Acc: 0.9571 | Val Loss: 1.4184 | Val Acc: 0.7940
+Epoch 175 | Train Loss: 0.9293 | Train Acc: 0.9571 | Val Loss: 1.2748 | Val Acc: 0.7920
+Epoch 200 | Train Loss: 0.7211 | Train Acc: 0.9571 | Val Loss: 1.1441 | Val Acc: 0.7920
+Test Loss: 1.1178 | Test Accuracy: 0.8060
+Training model with 2 layers, lr=0.001, hidden_dim=64, num_heads=[4], dropout=0.5
+Training GAT with 4 heads
+Epoch 25 | Train Loss: 1.8714 | Train Acc: 0.9000 | Val Loss: 1.8993 | Val Acc: 0.8000
+Epoch 50 | Train Loss: 1.7339 | Train Acc: 0.9500 | Val Loss: 1.8235 | Val Acc: 0.8040
+Epoch 75 | Train Loss: 1.5092 | Train Acc: 0.9500 | Val Loss: 1.6904 | Val Acc: 0.8120
+Epoch 100 | Train Loss: 1.2750 | Train Acc: 0.9429 | Val Loss: 1.5067 | Val Acc: 0.8000
+Epoch 125 | Train Loss: 0.9806 | Train Acc: 0.9714 | Val Loss: 1.3046 | Val Acc: 0.7960
+Epoch 150 | Train Loss: 0.7787 | Train Acc: 0.9714 | Val Loss: 1.1164 | Val Acc: 0.7920
+Epoch 175 | Train Loss: 0.5960 | Train Acc: 0.9714 | Val Loss: 0.9847 | Val Acc: 0.7880
+Epoch 200 | Train Loss: 0.5140 | Train Acc: 0.9500 | Val Loss: 0.8821 | Val Acc: 0.7860
+Test Loss: 0.8420 | Test Accuracy: 0.8120
+Configurations:
+model: GAT
+dataset: CORA
+num_heads: [4]
+num_layers: [2]
+hidden_dim: [8, 16, 32, 64]
+dropout: [0.5]
+use_bias: True
+lr: [0.001]
+weight_decay: 0.005
+epochs: 200

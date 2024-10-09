@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 parser = ArgumentParser()
 
 # Model choice
-parser.add_argument("--model", type=str, choices=["GAT", "GCN"], default="GAT")
+parser.add_argument("--model", type=str, choices=["GAT", "GCN", "GraphSAGE"], default="GAT")
 
 # Dataset choice
 parser.add_argument("--dataset", type=str, choices=["SQU", "CORA", "PPI"], default="PPI")
